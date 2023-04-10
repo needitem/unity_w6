@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 680.0f;
     [SerializeField] private float walkForce = 30.0f;
     [SerializeField] private float maxSpeed = 2.0f;
+    [SerializeField] private bool grounded = false;
 
     private int key = 0;
 
@@ -24,20 +25,27 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (rig2D.velocity.y == 0) { animator.SetBool("jumping", false); }
-        if (Input.GetKeyDown(KeyCode.Space) && rig2D.velocity.y == 0)
+        if (grounded)
         {
-            rig2D.AddForce(transform.up * jumpForce);
-            animator.SetBool("jumping", true);
+            animator.SetBool("jumping", false);
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                rig2D.AddForce(transform.up * jumpForce);
+                animator.SetBool("jumping", true);
+                grounded = false;
+            }
+            
         }
 
         key = 0;
         animator.SetBool("moving", false);
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
-            key = 1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true); 
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            key = 1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true);
         }
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) { 
-            key = -1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true); 
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            key = -1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true);
         }
 
         if (transform.position.y < -10)
@@ -58,6 +66,10 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Goal");
             SceneManager.LoadScene("ClearScene");
+        }
+        else if (collision.gameObject.tag == "Ground") // Ground에 충돌했을 때 grounded를 true로 변경
+        {
+            grounded = true;
         }
     }
 }
