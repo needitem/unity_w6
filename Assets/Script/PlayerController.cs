@@ -33,16 +33,23 @@ public class PlayerController : MonoBehaviour
 
         key = 0;
         animator.SetBool("moving", false);
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) { key = 1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true); }
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) { key = -1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true); }
-
-        float speedX = Mathf.Clamp(rig2D.velocity.x, -maxSpeed, maxSpeed);
-        rig2D.AddForce(transform.right * key * walkForce);
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+            key = 1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true); 
+        }
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) { 
+            key = -1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true); 
+        }
 
         if (transform.position.y < -10)
         {
             SceneManager.LoadScene("GameScene");
         }
+    }
+
+    private void FixedUpdate()
+    {
+        float speedX = Mathf.Clamp(rig2D.velocity.x, -maxSpeed, maxSpeed);
+        rig2D.AddForce(transform.right * key * walkForce);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
