@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float jumpForce = 680.0f;
     [SerializeField] private float walkForce = 30.0f;
-    [SerializeField] private float maxSpeed = 2.0f;
+    [SerializeField] private float maxSpeed = 1.0f;
     [SerializeField] private bool grounded = false;
 
     private int key = 0;
@@ -70,6 +70,16 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Ground") // Ground에 충돌했을 때 grounded를 true로 변경
         {
             grounded = true;
+            transform.SetParent(collision.transform, true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            grounded = false;
+            transform.parent = null;
         }
     }
 }
