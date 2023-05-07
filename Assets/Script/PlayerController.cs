@@ -47,11 +47,12 @@ public class PlayerController : MonoBehaviour
         {
             key = -1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true);
         }
-
+#if true
         if (transform.position.y < -10)
         {
             SceneManager.LoadScene("GameScene");
         }
+#endif
     }
 
     private void FixedUpdate()
@@ -70,10 +71,11 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Ground") // Ground에 충돌했을 때 grounded를 true로 변경
         {
             grounded = true;
-            transform.SetParent(collision.transform, true);
+            //transform.SetParent(collision.transform, true);
         }
     }
 
+#if false
     private void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Ground")
@@ -82,4 +84,5 @@ public class PlayerController : MonoBehaviour
             transform.parent = null;
         }
     }
+#endif
 }
