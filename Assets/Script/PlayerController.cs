@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rig2D;
     Animator animator;
+    ItemGenerate tile;
 
     [SerializeField] private float jumpForce = 680.0f;
     [SerializeField] private float walkForce = 30.0f;
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
     {
         rig2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        tile = FindObjectOfType<ItemGenerate>();
     }
 
     // Update is called once per frame
@@ -73,6 +75,11 @@ public class PlayerController : MonoBehaviour
             grounded = true;
             //transform.SetParent(collision.transform, true);
         }
+
+        else if (collision.gameObject.tag == "Item")
+        {
+            tile.CatEatsItem(transform.position);
+        }
     }
 
 #if false
@@ -85,4 +92,5 @@ public class PlayerController : MonoBehaviour
         }
     }
 #endif
+
 }
