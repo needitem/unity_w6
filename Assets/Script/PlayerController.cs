@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSpeed = 1.0f;
     [SerializeField] private bool grounded = false;
 
-
     private int key = 0;
 
     void Start()
@@ -26,42 +25,44 @@ public class PlayerController : MonoBehaviour
         gameDirector = GameObject.Find("GameDirector");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (grounded)
         {
             animator.SetBool("jumping", false);
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 rig2D.AddForce(transform.up * jumpForce);
                 animator.SetBool("jumping", true);
                 grounded = false;
             }
-            
         }
 
         key = 0;
         animator.SetBool("moving", false);
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            key = 1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true);
+            key = 1;
+            transform.localScale = new Vector3(key, 1, 1);
+            animator.SetBool("moving", true);
         }
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            key = -1; transform.localScale = new Vector3(key, 1, 1); animator.SetBool("moving", true);
+            key = -1;
+            transform.localScale = new Vector3(key, 1, 1);
+            animator.SetBool("moving", true);
         }
-#if true
+
         if (transform.position.y < -10)
         {
             SceneManager.LoadScene("GameScene");
         }
-#endif
     }
 
     private void FixedUpdate()
     {
         float speedX = Mathf.Clamp(rig2D.velocity.x, -maxSpeed, maxSpeed);
+        rig2D.velocity = new Vector2(speedX, rig2D.velocity.y);
         rig2D.AddForce(transform.right * key * walkForce);
     }
 
@@ -69,30 +70,15 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Goal")
         {
-            Debug.Log("Goal");
             SceneManager.LoadScene("ClearScene");
         }
-        else if (collision.gameObject.tag == "Ground") // Ground에 충돌했을 때 grounded를 true로 변경
+        else if (collision.gameObject.tag == "Ground")
         {
             grounded = true;
-            //transform.SetParent(collision.transform, true);
         }
-
         else if (collision.gameObject.tag == "Item")
         {
             gameDirector.GetComponent<GameDirector>().score += tile.CatEatsItem(transform.position);
         }
     }
-
-#if false
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if(collision.gameObject.tag == "Ground")
-        {
-            grounded = false;
-            transform.parent = null;
-        }
-    }
-#endif
-
 }
