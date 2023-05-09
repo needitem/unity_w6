@@ -8,20 +8,22 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rig2D;
     Animator animator;
     ItemGenerate tile;
+    GameObject gameDirector;
 
-    [SerializeField] private float jumpForce = 680.0f;
+    [SerializeField] private float jumpForce = 380.0f;
     [SerializeField] private float walkForce = 30.0f;
     [SerializeField] private float maxSpeed = 1.0f;
     [SerializeField] private bool grounded = false;
 
-    private int key = 0;
 
+    private int key = 0;
 
     void Start()
     {
         rig2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         tile = FindObjectOfType<ItemGenerate>();
+        gameDirector = GameObject.Find("GameDirector");
     }
 
     // Update is called once per frame
@@ -78,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
         else if (collision.gameObject.tag == "Item")
         {
-            tile.CatEatsItem(transform.position);
+            gameDirector.GetComponent<GameDirector>().score += tile.CatEatsItem(transform.position);
         }
     }
 
